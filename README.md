@@ -1,4 +1,4 @@
-# 🚀 TTTAP Core Engine (CAR DAMAGES AI ESTIMATOR) - v0.3.0
+# 🚀 TTTAP Core Engine (CAR DAMAGES AI ESTIMATOR) - Demo Release v3.0
 
 **🎬 Watch Demo Video:** 
 
@@ -8,46 +8,72 @@ https://github.com/user-attachments/assets/ebbc4f2f-acb5-43fc-bf99-8cdb5cbd50c9
 
 
 
-**🏷 Version:** 0.3.0 (Alpha MVP)  
-**⚙️ Core Model:** Gemini 3 Flash (Vision) / Gemini 3.1 Pro (Search)
+# TTTAP Core v3.0 (Alpha MVP)
+**Hybrid AI Engine for Automated Auto Body Repair Estimation**
 
-TTTAP Core is a hybrid AI engine designed for automated auto body repair estimation based on visual data (photos/videos). It is specifically tailored to the realities of the Czech automotive market (calculating in flat-rate labor hours / Normohodiny, where 1 Nh = 1000 Kč).
+**⚙️ Models:** Gemini 3.0 Flash (Vision + Caching) / Gemini 3.1 Pro (Search & Video)
+**📍 Focus:** Czech Automotive Market (Prague/EU)
+**💰 Target Efficiency:** ~2 Kč per standard request
 
-## 🔥 What's New in v0.3.0 (Major Update)
+---
 
-In this release, we transitioned from a simple visual calculator to a full-fledged SaaS platform featuring role-based access, database integration, and heavily upgraded UX/UI.
+## 🚀 Overview
+TTTAP Core is a professional-grade hybrid engine that transforms visual data (photos/videos) into a detailed repair estimate based on real-world Czech flat-rate labor hours (**Normohodiny / Nh**). Version 0.3.0 marks the transition from a simple calculator to a robust SaaS platform designed for garage deployment.
 
-* **🎭 Dual-Role Interface (Two Tracks):** * **Client View:** Displays only retail prices for parts and the final repair cost (clean UI, no links, no wholesale data).
-  * **Master View (God Mode):** Unlocks wholesale prices (velkoobchod), direct purchase links, and pure profit margins. Parts are automatically categorized into: OEM, Good Aftermarket, Average Aftermarket, and Used.
-* **🎥 Multimedia Engine (Up to 10 Files + Video):**
-  Integrated Google GenAI `File API`. The system now processes not just photos, but full **video fly-arounds** of the vehicle. The AI can detect body damage and geometry issues directly from the video feed.
-* **🌍 Internationalization (i18n):**
-  Full language switching implemented: `Czech`, `Russian`, and `English`.
-* **🌗 UI Customization:**
-  Added Light / Dark mode toggle for comfortable use in garage environments under varying lighting conditions.
-* **🔢 Automated VIN Decoder (NHTSA API):**
-  Added Make, Model, and Year recognition via 17-digit VIN lookups (currently in beta, works best with newer vehicles).
-* **📊 CRM Integration (Firebase):**
-  Connected Firestore database to save leads, estimate history, and manage client interactions via an integrated Telegram Bot.
+---
 
-## 🧠 Architecture & Logic (Unified Routing Engine)
+## 🔥 Key Features in v3.0
 
-* **Monolithic System Prompt:** All estimation logic (PDR, frame work, painting, panel replacement) has been merged into a single, comprehensive system prompt. The AI evaluates all parameters simultaneously, strictly following local market rules (e.g., ignoring minor adjacent scratches during severe side impacts, flagging frame damage for manual review).
-* **Dynamic Search Agent:** Utilizes the heavy `gemini-3.1-pro-preview` model equipped with the Google Search Tool to hunt down real OEM part numbers and scrape prices from local Czech suppliers (LKQ, Automedik, RRR.lt).
-* **Backend Rate Limiting:** Express server secured with strict rate limiters (100 requests / 15 mins for the main API, 20 requests / hour for VIN lookups) to prevent API abuse.
+### 1. Advanced AI Logic (Prompt v3.0)
+The estimation engine now uses a monolithic "Audit Layer" to apply complex heuristics:
+* **Anti-Hallucination for Compact Cars:** Specifically tuned for vehicles like Toyota iQ or Smart to prevent unnecessary parts replacement.
+* **Hybrid Text+Photo Input:** The AI now incorporates user notes (e.g., "add fender repair") even if damage isn't clearly visible in photos.
+* **Floor Heuristics:** Implements a strict price floor for severe side impacts (~60-65k Kč) to ensure market-realistic estimates.
+* **Repair-First Policy:** Prioritizes metalwork and soldering (PDR/Bumper soldering) over costly replacements unless panels are structurally compromised.
 
-## ⚠️ Known Issues (Alpha Limitations)
+### 2. Multimedia & Video Engine
+* **Video Fly-around Support:** Integrated Google GenAI `File API` to process 360-degree vehicle videos.
+* **Intelligent Model Routing:** * **Flash + Context Caching:** Used for standard photo audits to minimize costs (up to 60% savings on input tokens).
+    * **Pro Model:** Automatically triggered for video analysis or high-volume (6+ files) uploads.
 
-The system is currently in Alpha. We are actively working on resolving the following bugs:
-* **VIN Decoder Hit Rate:** The NHTSA API occasionally fails to decode older vehicles or specific European-spec cars. Planning a migration to a more robust commercial API (e.g., TecDoc).
-* **Hallucinated / Broken Links:** The AI Search Agent occasionally generates broken URLs for parts in the Master View by attempting to guess the e-commerce routing structure.
-* **Part Pricing Math:** Real-time web scraping for exact wholesale/retail prices is currently unstable. The AI sometimes falls back to heuristic estimations instead of exact catalog data.
-* **Raw / Legacy Code:** `server.ts` currently contains some temporary workarounds for rate limits and JSON parsing fallbacks that need refactoring.
+### 3. Localization & Identification
+* **RapidAPI VIN Integration:** Upgraded from NHTSA to a commercial-grade decoder for better hit rates on European-spec vehicles (Skoda, VW, etc.).
+* **i18n Support:** Dynamic switching between **Czech, Russian, and English**.
+
+### 4. Dual-Role Interface
+* **Client View:** Clean, retail-focused summary with final costs.
+* **Master View (Garage Mode):** Unlocks wholesale pricing (velkoobchod), profit margin analysis, and direct supplier links (LKQ, Automedik, RRR.lt).
+
+---
+
+## 🧠 Optimization Strategy (Cost Control)
+
+| Action | Model | Frequency | Estimated Cost |
+| :--- | :--- | :--- | :--- |
+| **Standard Photo Audit** | Flash + Cache | Every request | **1–2 Kč** |
+| **Video Audit** | Pro Model | Rare / Specialized | **8–10 Kč** |
+| **Deep Parts Search** | Pro + Google Search | On-demand (Button click) | **5–8 Kč** |
+
+> **Context Caching:** By caching the 4,000+ token "System Instruction" on the server, we prevent high recurring costs for the monolithic prompt.
+
+---
 
 ## 🛠 Tech Stack
+* **Frontend:** React, Tailwind CSS, Vite.
+* **Backend:** Node.js (Express), Vite Middleware.
+* **AI Engine:** `@google/genai` (Context Caching enabled).
+* **Database:** Firebase Firestore (Lead Management).
+* **VIN Service:** RapidAPI (Primary) / NHTSA (Fallback).
+* **Parts Search:** Google Search Tool integration via Gemini Pro.
 
-* **Backend:** Node.js, Express.js, Vite (Middleware mode).
-* **AI Engine:** `@google/genai` (Gemini 3 Flash, Gemini 3.1 Pro).
-* **Database:** Firebase Firestore.
-* **Integrations:** Telegraf (Telegram Bot), NHTSA API (VIN).
+---
 
+## ⚠️ Known Limitations (Alpha)
+* **Video Frame Breakdown:** Currently working on manual frame extraction to further reduce Pro model costs.
+* **Dynamic Links:** AI Search Agent may occasionally generate broken URLs if OEM numbers are missing from common databases.
+* **Heuristic Fallbacks:** When real-time price scraping fails, the system defaults to "Catalog Heuristics" based on vehicle class.
+
+---
+
+**🏷 Version:** Demo Release v3.0 (MVP)
+**🏗 Developer Status:** Deploying to pilot partner garages next week.

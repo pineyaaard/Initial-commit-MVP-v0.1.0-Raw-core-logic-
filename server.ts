@@ -13,7 +13,7 @@ import { GoogleGenAI } from "@google/genai";
 import { SYSTEM_INSTRUCTION } from "./src/lib/prompt";
 
 // ─── CONFIG ─────────────────────────────────────────────────────────────────
-const RAPID_API_KEY = process.env.RAPID_API_KEY || "6b11f8d9ccmsh0381b30e2d3a632p1abb05jsn34fe649af9ca";
+const RAPID_API_KEY = process.env.RAPID_API_KEY || "SPAREPAARTSAPI";
 const RAPID_API_HOST = "vin-decoder1.p.rapidapi.com";
 
 // ─── Firebase ───────────────────────────────────────────────────────────────

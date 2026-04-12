@@ -13,7 +13,7 @@ import { GoogleGenAI } from "@google/genai";
 import { SYSTEM_INSTRUCTION } from "./src/lib/prompt";
 
 // ─── CONFIG ─────────────────────────────────────────────────────────────────
-const RAPID_API_KEY = process.env.RAPID_API_KEY || "SPAREPAARTSAPI";
+const RAPID_API_KEY = process.env.RAPID_API_KEY || "SECRET";
 const RAPID_API_HOST = "vin-decoder1.p.rapidapi.com";
 
 // ─── Firebase ───────────────────────────────────────────────────────────────
@@ -44,7 +44,7 @@ const vinLimiter = rateLimit({
 });
 
 function resolveApiKey(frontendKey?: string): string {
-  return frontendKey || "СЕКРЕТИКИ" || "";
+  return frontendKey || "AIzaSyA0JeIWMdjEsf7LzVddMPBTC02uqTh7Uvs" || "";
 }
 
 function getAI(apiKey: string): GoogleGenAI {
@@ -194,7 +194,13 @@ async function estimateDamage(
       contents: [{ 
         parts: [
           ...parts, 
-          { text: `${langInstruction}\nAnalyze damage strictly by rules. Show math in Nh. Discard minor adjacent damage. Output valid JSON.` }
+
+
+const carContext = carInfo 
+  ? `Vehicle: ${carInfo.brand} ${carInfo.model} ${carInfo.year}. ` 
+  : '';
+
+{ text: `${langInstruction}\n${carContext}Analyze damage strictly by rules. Show math in Nh. Output valid JSON.` }
         ] 
       }],
       config: requestConfig
@@ -263,7 +269,8 @@ async function startServer() {
 
   // ── 1. ESTIMATE DAMAGE ──────────────────────────────────────────────────
   app.post("/api/estimate", apiLimiter, async (req, res) => {
-    const { files, apiKey, lang } = req.body;
+    const { files, apiKey, lang, carInfo } = req.body;
+const result = await estimateDamage(files, apiKey || "", lang || "ru", carInfo);
 
     if (!files || !Array.isArray(files) || files.length === 0) {
       return res.status(400).json({ error: "No files provided." });

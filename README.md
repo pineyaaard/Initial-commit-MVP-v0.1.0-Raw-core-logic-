@@ -42,7 +42,7 @@ The estimation engine now uses a monolithic "Audit Layer" to apply complex heuri
 
 ### 4. Dual-Role Interface
 * **Client View:** Clean, retail-focused summary with final costs.
-* **Master View (Garage Mode):** Unlocks wholesale pricing (velkoobchod), profit margin analysis, and direct supplier links (LKQ, Automedik, RRR.lt).
+* **Master View (Garage Mode):** Unlocks wholesale pricing (velkoobchod), profit margin analysis, and direct supplier links (local).
 
 ---
 
@@ -63,7 +63,7 @@ The estimation engine now uses a monolithic "Audit Layer" to apply complex heuri
 * **Backend:** Node.js (Express), Vite Middleware.
 * **AI Engine:** `@google/genai` (Context Caching enabled).
 * **Database:** Firebase Firestore (Lead Management).
-* **VIN Service:** RapidAPI (Primary) / NHTSA (Fallback).
+* **VIN Service:** Internal SpareParts Shop VIN Decoder, Internal database and Vortex (for American Cars)
 * **Parts Search:** Google Search Tool integration via Gemini Pro.
 
 ---
